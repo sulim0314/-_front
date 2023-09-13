@@ -1,0 +1,82 @@
+#demo {
+  width: 70%;
+  display: flex;
+  margin-top: 80px;
+  margin-left: 15%;
+  height: 1000px;
+}
+/*수림이 따라하기 대작전*/
+.admin-form {
+  border-radius: 30px;
+  background-color: #dfccfb46;
+  width: 500px;
+  padding-bottom: 50px;
+  /* box-shadow: 0 0 10px #adc4ce; */
+  margin-bottom: 140px;
+}
+
+.top {
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.206);
+  justify-content: center;
+  padding: 10px 10px;
+  font-size: 28px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: #213555;
+}
+
+.text-area {
+  background-color: rgba(255, 255, 255, 0.638);
+  border-radius: 10px;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 20px 20px 10px;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: #213555;
+  font-size: 20px;
+}
+
+.survey-title {
+  text-align: center;
+  font-size: 20px;
+}
+
+.announce-btn:hover {
+  /* text-overflow: inherit; */
+  color: rgb(12, 28, 247);
+  /* box-shadow: 0 0 3px #aed2ff; */
+  text-decoration: underline;
+}
+
+/*backdrop-filter: blur(5px); 배경 이미지 블러 처리 */
+
+/* body {
+  background-image: url(/project/assets/img/jeju1.jpg);
+  background-size: cover; /* 이미지를 화면에 꽉 채우도록 크기 조정 */
+/* background-repeat: no-repeat; 배경 이미지 반복 없음 */
+/* background-attachment: fixed;  스크롤 시 배경 이미지 고정 
+}  */
+/* body {
+  background-image: url(/project/assets/img/jeju1.jpg);
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  animation: changeBackground 8s infinite;
+}
+@keyframes changeBackground {
+  0% {
+    background-image: url(/project/assets/img/jeju1.jpg); 
+  }
+  25% {
+    background-image: url(/project/assets/img/korea.jpg);
+  }
+  50% {
+    background-image: url(/project/assets/img/lotte.png);
+  }
+  75% {
+    background-image: url(/project/assets/img/korea.jpg); 
+  }
+} */

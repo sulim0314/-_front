@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trip</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+      body {
+        background-image: url(./assets/img/jeju1.jpg);
+        background-size: cover; /* 이미지를 화면에 꽉 채우도록 크기 조정 */
+        background-repeat: no-repeat; /* 배경 이미지 반복 없음 */
+        background-attachment: fixed; /* 스크롤 시 배경 이미지 고정 */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 상단 navbar start -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand text-black fw-bold"
+          href="index.html"
+          style="
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 30px;
+          "
+        >
+          <img src="./assets/img/logo.png" alt="" width="60" />
+          Enjoy Trip
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav me-auto">
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="#">공지사항</a>
+              </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="place.html">핫플찾기🚗</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">여행계획🎈</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="board.html">정보공유✨</a>
+            </li>
+          </ul>
+          <!-- 로그인 전 -->
+          <ul class="navbar-nav mb-2 me-2 mb-lg-0 beforeLogin">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="register.html">회원가입 ✍🏻</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="login.html">로그인</a>
+            </li>
+          </ul>
+          <!-- 로그인 후 -->
+          <ul class="navbar-nav mb-2 me-2 mb-lg-0 afterLogin">
+            <li class="nav-item after">
+              <a class="nav-link" aria-current="page" href="#" onclick="logout()">로그아웃</a>
+            </li>
+            <li class="nav-item after">
+              <a class="nav-link" aria-current="page" href="mypage.html">마이페이지</a>
+            </li>
+            <!-- 만약에 내가 관리자라면 -->
+            <li class="nav-item dropdown admin">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                관리자
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pollModal"
+                    >투표만들기</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    data-bs-toggle="modal"
+                    data-bs-target="#announce-register"
+                    href="#"
+                    >공지사항 등록</a
+                  >
+                </li>
+                <li><a class="dropdown-item" href="#">회원관리</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- 상단 navbar end -->
+    <!-- 메인 페이지 start-->
+    <main class="container box">
+      <div class="admin-form" style="margin-top: 100px">
+        <div class="title">
+          <div class="top">공지사항</div>
+        </div>
+        <div id="announcements" class="text-area">
+          <!-- 모달로 공지사항 표시하게 만들기 -->
+        </div>
+        <div class="title">
+          <div class="top">진행중인 투표</div>
+        </div>
+        <div id="survey" class="text-area">
+          <div id="poll-area"></div>
+        </div>
+      </div>
+      <!-- 모달 start -->
+      <div class="modal" id="for-delete" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <p>회원 정보를 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                아니오
+              </button>
+              <button type="button" onclick="deleteUser()" class="btn btn-primary">네</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 모달 end -->
+    </main>
+    <!-- 메인 페이지 end-->
+
+    <!-- 설문조사 modal start -->
+    <div
+      class="modal fade"
+      id="pollModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <i class="bi bi-chat-left-dots-fill text-info"> 투표 만들기</i>
+            </h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form action="">
+              <div class="row mb-3 mt-3">
+                <div class="col-md-6">
+                  <i class="bi bi-calendar2-date text-primary"></i>
+                  <label for="start-date" class="form-label">시작일:</label>
+                  <input type="date" class="form-control" id="start-date" name="start-date" />
+                </div>
+                <div class="col-md-6">
+                  <i class="bi bi-calendar2-date text-danger"></i>
+                  <label for="end-date" class="form-label">종료일:</label>
+                  <input type="date" class="form-control" id="end-date" name="end-date" />
+                </div>
+              </div>
+              <div class="mb-3">
+                <i class="bi bi-patch-question" style="color: rgb(121, 2, 119)"></i>
+                <label for="question" class="form-label">질문제목:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question"
+                  placeholder="질문제목 입력..."
+                  name="question"
+                />
+              </div>
+              <div class="mb-3">
+                <i class="bi bi-pencil-square" style="color: rgb(14, 2, 121)"></i>
+                <label for="question" class="form-label">답변항목:</label>
+                <button
+                  type="button"
+                  id="btn-answer-add"
+                  onclick="addNewChecklist()"
+                  class="btn btn-outline-primary btn-sm"
+                >
+                  <i class="bi bi-plus-square-fill"></i> 추가
+                </button>
+              </div>
+              <div id="poll-answer-list" class="row mb-3">
+                <div class="row mb-1 poll-answer-list-item">
+                  <div class="col-md-10">
+                    <input type="text" class="form-control" name="answer" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              id="btn-poll-create"
+              onclick="makeSurvey()"
+              class="btn btn-primary btn-sm"
+            >
+              투표생성
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 설문조사 modal end -->
+
+    <!-- 공지사항 modal start -->
+    <div
+      class="modal fade"
+      id="announce-register"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">
+              <i class="bi bi-chat-left-dots-fill text-info"> 공지사항 등록</i>
+            </h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form action="">
+              <div class="mb-3">
+                <i class="bi" style="color: rgb(121, 2, 119)"></i>
+                <label for="announce-title" class="form-label">제목:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="announce-title"
+                  placeholder="제목 입력..."
+                  name="announce-title"
+                />
+              </div>
+              <div class="mb-3">
+                <i class="bi" style="color: rgb(121, 2, 119)"></i>
+                <label for="announce-content" class="form-label">내용:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="announce-content"
+                  placeholder="내용 입력..."
+                  name="announce-content"
+                />
+              </div>
+            </form>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              id="btn-poll-create"
+              onclick="makeAnnouncement()"
+              class="btn btn-primary btn-sm"
+            >
+              공지사항 등록
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 공지사항 modal end -->
+    <!----------===================================================--------------------------------------------->
+    <!-- <div style="height: 200px"></div>
+    <input type="text" id="searchTerm" placeholder="검색어 입력" />
+    <button onclick="searchImages()">검색</button>
+    <div id="imageResults"></div> -->
+    <!--------------=========================================------------------------------------------------------------->
+    <script>
+      function searchImages() {
+        const searchTerm = document.getElementById("searchTerm").value;
+
+        // Google Images API를 호출하는 코드 작성
+        // API 응답에서 이미지 URL을 가져와서 웹 페이지에 표시
+      }
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./assets/js/loginUser.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/admin.js"></script>
+  </body>
+</html>

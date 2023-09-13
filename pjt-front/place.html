@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trip</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="assets/css/place.css" />
+  </head>
+  <body>
+    <!-- 상단 navbar start -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+      <div class="container">
+        <a
+          class="navbar-brand text-black fw-bold"
+          href="index.html"
+          style="
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 30px;
+          "
+        >
+          <img src="./assets/img/logo.png" alt="" width="60" />
+          Enjoy Trip
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavbar"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav me-auto">
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="#">공지사항</a>
+              </li> -->
+            <li class="nav-item">
+              <a class="nav-link" href="place.html">핫플찾기🚗</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">여행계획🎈</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="board.html">정보공유✨</a>
+            </li>
+          </ul>
+          <!-- 로그인 전 -->
+          <ul class="navbar-nav mb-2 me-2 mb-lg-0 beforeLogin">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="register.html">회원가입 ✍🏻</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="login.html">로그인</a>
+            </li>
+          </ul>
+          <!-- 로그인 후 -->
+          <ul class="navbar-nav mb-2 me-2 mb-lg-0 afterLogin">
+            <li class="nav-item after">
+              <a class="nav-link" aria-current="page" href="#" onclick="logout()">로그아웃</a>
+            </li>
+            <li class="nav-item after">
+              <a class="nav-link" aria-current="page" href="mypage.html">마이페이지</a>
+            </li>
+            <!-- 만약에 내가 관리자라면 -->
+            <li class="nav-item dropdown admin">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                관리자
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#pollModal"
+                    >투표만들기</a
+                  >
+                </li>
+                <li><a class="dropdown-item" href="#">차트보기</a></li>
+                <li><a class="dropdown-item" href="#">회원관리</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- 상단 navbar end -->
+    <div class="info-box">
+      <div class="title"><div class="title-div">지역별 핫플 ✨</div></div>
+      <!-- 관광지 검색 start -->
+      <form class="d-flex my-3" onsubmit="return false;" role="search">
+        <div class="drops">
+          <select class="form-select" id="sido">
+            <option value="">시도선택</option>
+          </select>
+          <select class="form-select" id="gugun">
+            <option value="">구군선택</option>
+          </select>
+
+          <div>
+            <select class="form-select" id="search-content-id" class="form-select me-2">
+              <option value="0" selected>관광지 유형</option>
+              <option value="12">관광지</option>
+              <option value="14">문화시설</option>
+              <option value="15">축제공연행사</option>
+              <option value="25">여행코스</option>
+              <option value="28">레포츠</option>
+              <option value="32">숙박</option>
+              <option value="38">쇼핑</option>
+              <option value="39">음식점</option>
+            </select>
+          </div>
+          <button id="btn-search" class="btn" type="button">검색</button>
+        </div>
+      </form>
+    </div>
+    <!-- ============================== -->
+    <!-- [ Base URL: apis.data.go.kr/B551011/KorService1 ] -->
+    <div class="both">
+      <div id="map" style="width: 45%; height: 600px; margin-left: 5%"></div>
+      <div class="row table-div">
+        <table class="table table-striped" style="display: none">
+          <thead>
+            <tr>
+              <th style="width: 50%">대표이미지</th>
+              <th>관광지명</th>
+              <th>주소</th>
+            </tr>
+          </thead>
+          <tbody id="trip-list"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--------------------------------------------------------------------------->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./assets/js/loginUser.js"></script>
+    <script src="./assets/js/main.js"></script>
+
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=302f0a5332f0086029f43115ae4621cd"
+    ></script>
+    <script>
+      // ================================================================================
+
+      ///////////////////////// select box 설정 (지역, 매매기간) /////////////////////////
+      let date = new Date();
+
+      // 브라우저가 열리면 시도정보 얻기.
+      sendRequest("sido", "*00000000");
+
+      // https://juso.dev/docs/reg-code-api/
+      // let url = "https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes";
+      // let regcode = "*00000000";
+      // 전국 특별/광역시, 도
+      // https://grpc-proxy-server-mkvo6j4wsq-du.a.run.app/v1/regcodes?regcode_pattern=*00000000
+
+      // 시도가 바뀌면 구군정보 얻기.
+      document.querySelector("#sido").addEventListener("change", function () {
+        if (this[this.selectedIndex].value) {
+          let regcode = this[this.selectedIndex].value;
+          sendRequest("gugun", regcode);
+        } else {
+          initOption("gugun");
+        }
+      });
+
+      // 구군이 바뀌면 동정보 얻기.
+      // document.querySelector("#gugun").addEventListener("change", function () {
+      //   if (this[this.selectedIndex].value) {
+      //     let regcode = this[this.selectedIndex].value.substr(0, 5) + "*";
+      //     sendRequest("dong", regcode);
+      //   } else {
+      //     initOption("dong");
+      //   }
+      // });
+
+      function sendRequest(selid, regcode) {
+        let baseUrl = `https://apis.data.go.kr/B551011/KorService1/`;
+        let serviceKey = `ScOkM1ug0yE7uoDK3Ft8mvtZ6YP2%2FLmcZJq7aiocIoIwoD3Jja5Dkx%2FCkAbdzrQQke7fV2%2BeQr5J%2FibWyeAhfw%3D%3D`;
+        let queryString = `serviceKey=${serviceKey}&numOfRows=30&MobileOS=ETC&MobileApp=Test&_type=json`;
+        if (selid == "sido") {
+          let searchUrl = baseUrl + "areaCode1" + "?" + queryString;
+          fetch(searchUrl)
+            .then((response) => response.json())
+            .then((data) => addOption(selid, data));
+        } else {
+          let searchUrl = baseUrl + "areaCode1" + "?" + queryString + `&areaCode=${regcode}`;
+          fetch(searchUrl)
+            .then((response) => response.json())
+            .then((data) => addOption(selid, data));
+        }
+      }
+
+      function addOption(selid, data) {
+        let opt = ``;
+        initOption(selid);
+        switch (selid) {
+          case "sido":
+            opt += `<option value="">시도선택</option>`;
+            data.response.body.items.item.forEach(function (regcode) {
+              opt += `
+                <option value="${regcode.code}">${regcode.name}</option>
+                `;
+            });
+            break;
+          case "gugun":
+            opt += `<option value="">구군선택</option>`;
+            // console.log(data.response.body.items.item);
+            data.response.body.items.item.forEach(function (regcode) {
+              opt += `
+                <option value="${regcode.code}">${regcode.name}</option>
+                `;
+            });
+            break;
+        }
+        document.querySelector(`#${selid}`).innerHTML = opt;
+      }
+
+      function initOption(selid) {
+        let options = document.querySelector(`#${selid}`);
+        options.length = 0;
+      }
+
+      serviceKey = `ScOkM1ug0yE7uoDK3Ft8mvtZ6YP2%2FLmcZJq7aiocIoIwoD3Jja5Dkx%2FCkAbdzrQQke7fV2%2BeQr5J%2FibWyeAhfw%3D%3D`;
+      document.getElementById("btn-search").addEventListener("click", () => {
+        let baseUrl = `https://apis.data.go.kr/B551011/KorService1/`;
+
+        let queryString = `serviceKey=${serviceKey}&numOfRows=100&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A`;
+        let areaCode = document.querySelector("#sido").selectedIndex;
+        let sigungucode = document.querySelector("#gugun").selectedIndex;
+        let contentTypeId = document.getElementById("search-content-id").value;
+
+        if (parseInt(areaCode)) queryString += `&areaCode=${areaCode}&sigunguCode=${sigungucode}`;
+        if (parseInt(contentTypeId)) queryString += `&contentTypeId=${contentTypeId}`;
+        let service = ``;
+        service = `areaBasedList1`;
+        let searchUrl = baseUrl + service + "?" + queryString;
+        fetch(searchUrl)
+          .then((response) => response.json())
+          .then((data) => makeList(data));
+      });
+      /////////////////////////////////////////////////
+      var positions; // marker 배열.
+      // 마커와 인포윈도우를 관리할 배열을 생성합니다.
+      var markers = [];
+      var infowindows = [];
+
+      function makeList(data) {
+        console.log(data);
+        document.querySelector("table").setAttribute("style", "display: ;");
+        let trips = data.response.body.items.item;
+        console.log(trips);
+        let tripList = ``;
+        positions = [];
+        trips.forEach((area) => {
+          tripList += `
+            <tr onclick="moveCenter(${area.mapy}, ${area.mapx});">
+              <td><img src="${area.firstimage}" width="100%" class="rounded"></td>
+              <td>${area.title}</td>
+              <td>${area.addr1} ${area.addr2}</td>
+            </tr>
+          `;
+          // <td>${area.mapy}</td>  <td>${area.mapx}</td>
+          let markerInfo = {
+            img: area.firstimage,
+            title: area.title,
+            latlng: new kakao.maps.LatLng(area.mapy, area.mapx),
+            addr: area.addr1 + area.addr2,
+          };
+          positions.push(markerInfo);
+        });
+        document.getElementById("trip-list").innerHTML = tripList;
+        removeMarker();
+        displayMarker();
+      }
+
+      // 카카오지도 ===============================================================
+      var mapContainer = document.getElementById("map"), // 지도를 표시할 div
+        mapOption = {
+          center: new kakao.maps.LatLng(37.500613, 127.036431), // 지도의 중심좌표
+          level: 5, // 지도의 확대 레벨
+        };
+
+      // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+      var map = new kakao.maps.Map(mapContainer, mapOption);
+
+      function removeMarker() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null); // 마커를 지도에서 제거합니다.
+        }
+        markers = []; // 배열을 비웁니다.
+      }
+
+      function displayMarker() {
+        // 마커 이미지의 이미지 주소입니다
+        var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+        for (var i = 0; i < positions.length; i++) {
+          // 마커 이미지의 이미지 크기 입니다
+          var imageSize = new kakao.maps.Size(24, 35);
+
+          // 마커 이미지를 생성합니다
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+          marker = null;
+
+          // 마커를 생성합니다
+          var marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: positions[i].latlng, // 마커를 표시할 위치
+            //title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            image: markerImage, // 마커 이미지
+          });
+
+          // 인포윈도우 내용 (여기서는 간단한 문자열로 가정)
+          var infowindowContent =
+            '<div class="nemo">' +
+            '<div><img src="' +
+            positions[i].img +
+            '" class="rounded"></div>' +
+            '<div class="nemo-title">' +
+            positions[i].title +
+            "</div>" +
+            " " +
+            '<div class="nemo-addr">' +
+            positions[i].addr +
+            "</div></div>";
+          // console.log(infowindowContent);
+          // 인포윈도우 생성
+          var infowindow = new kakao.maps.InfoWindow({
+            content: infowindowContent,
+          });
+
+          infowindows.push(infowindow);
+
+          // 마커에 마우스 오버 이벤트 리스너 등록
+          kakao.maps.event.addListener(
+            marker,
+            "mouseover",
+            (function (marker, i) {
+              return function () {
+                // 해당 마커에 대한 인포윈도우를 엽니다.
+                infowindows[i].open(map, marker);
+              };
+            })(marker, i)
+          );
+
+          // 마커에 마우스 아웃 이벤트 리스너 등록 (선택 사항)
+          kakao.maps.event.addListener(
+            marker,
+            "mouseout",
+            (function (marker, i) {
+              return function () {
+                // 해당 마커에 대한 인포윈도우를 닫습니다.
+                infowindows[i].close();
+              };
+            })(marker, i)
+          );
+        }
+
+        // 첫번째 검색 정보를 이용하여 지도 중심을 이동 시킵니다
+        map.setCenter(positions[0].latlng);
+      }
+      function moveCenter(lat, lng) {
+        map.setCenter(new kakao.maps.LatLng(lat, lng));
+      }
+
+      // ================================================================================
+
+      // ================================================================================
+      var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
+
+      // 마커가 표시될 위치입니다
+      var position = new kakao.maps.LatLng(33.450701, 126.570667);
+
+      var options = {
+        //지도를 생성할 때 필요한 기본 옵션
+        center: position, //지도의 중심좌표.
+        level: 3, //지도의 레벨(확대, 축소 정도)
+      };
+
+      var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+      var mapTypeControl = new kakao.maps.MapTypeControl();
+
+      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      var zoomControl = new kakao.maps.ZoomControl();
+      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+      var imageSrc = "./assets/img/logo.png", // 마커이미지의 주소입니다
+        imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+        imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+        markerPosition = new kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다
+
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+        position: position,
+        image: markerImage, // 마커이미지 설정
+      });
+
+      // 마커가 지도 위에 표시되도록 설정합니다
+      marker.setMap(map);
+    </script>
+    <!--------------------------------------------------------------------------->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./assets/js/loginUser.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script></script>
+  </body>
+</html>
